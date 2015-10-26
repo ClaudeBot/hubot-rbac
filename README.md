@@ -5,7 +5,7 @@
 
 A Hubot script for restricting access to commands through [role-based access control (RBAC)][rbac], and [Listener IDs][options].
 
-Roles are automatically created when policies are added / removed (e.g. when a listener ID is blocked). Currently, the script can only be block listeners IF they have an ID attached to it via their [options / metadata][options]. Furthermore, the full ID must be specified when creating policies.
+Roles are automatically created when policies are added / removed (e.g. when a listener ID is blocked). Currently, the script can only block listeners IF they have an ID attached to it via their [options / metadata][options]. Furthermore, the full ID must be specified when creating policies.
 
 See [`src/authority.coffee`](src/authority.coffee) for full documentation.
 
