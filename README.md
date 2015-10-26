@@ -48,8 +48,8 @@ user1>> hubot auth me
 hubot>> user1: You are not assigned to any roles.
 user1>> hubot auth block links.list nolinkrecording
 hubot>> user1: Listener ID "links.list" is blocked for "nolinkrecording" subjects.
-user1>> hubot auth assign Shell nolinkrecording
-hubot>> user1: Assigned "Shell" to "nolinkrecording".
+user1>> hubot auth assign user1 nolinkrecording
+hubot>> user1: Assigned "user1" to "nolinkrecording".
 user1>> hubot links list
 hubot>> user1: Sorry, you are not authorised to execute that command.
 user1>> hubot auth me
