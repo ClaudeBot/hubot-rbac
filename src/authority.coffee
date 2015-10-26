@@ -27,6 +27,7 @@ module.exports = (robot) ->
     _default = false
 
     _updatePolicy = (lid, role, block = true) ->
+        # Roles are automatically created if they do not exist
         newPolicies = _policies.update(role, Immutable.Set(), (set) ->
             if block
                 robot.logger.debug "hubot-authority: blocking listener ID..."

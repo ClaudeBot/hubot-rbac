@@ -3,7 +3,9 @@
 [![Build Status](https://travis-ci.org/ClaudeBot/hubot-authority.svg)](https://travis-ci.org/ClaudeBot/hubot-authority)
 [![devDependency Status](https://david-dm.org/ClaudeBot/hubot-authority/dev-status.svg)](https://david-dm.org/ClaudeBot/hubot-authority#info=devDependencies)
 
-A Hubot script for restricting access to commands through role-based access control (RBAC), and [Listener IDs][listenerids].
+A Hubot script for restricting access to commands through [role-based access control (RBAC)][rbac], and [Listener IDs][options].
+
+Roles are automatically created when policies are added / removed (e.g. when a listener ID is blocked). Currently, the script can only be block listeners IF they have an ID attached to it via their [options / metadata][options]. Furthermore, the full ID must be specified when creating policies.
 
 See [`src/authority.coffee`](src/authority.coffee) for full documentation.
 
@@ -57,4 +59,5 @@ hubot>> user1: You have been assigned the following role(s): nolinkrecording
 ```
 
 
-[listenerids]: https://hubot.github.com/docs/scripting/#listener-metadata
+[rbac]: https://en.wikipedia.org/wiki/Role-based_access_control
+[options]: https://hubot.github.com/docs/scripting/#listener-metadata
