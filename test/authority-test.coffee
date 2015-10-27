@@ -7,6 +7,8 @@ expect = chai.expect
 describe "authority", ->
   beforeEach ->
     @robot =
+      brain:
+        on: sinon.spy()
       respond: sinon.spy()
       hear: sinon.spy()
       listenerMiddleware: sinon.spy (context, next, done) =>
@@ -24,3 +26,6 @@ describe "authority", ->
 
   it "registers a listener middleware", ->
     expect(@robot.listenerMiddleware).to.have.been.called
+
+  it "registers a brain event listener", ->
+    expect(@robot.brain.on).to.have.been.calledWith("loaded")

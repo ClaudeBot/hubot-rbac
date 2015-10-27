@@ -26,30 +26,50 @@ module.exports = (robot) ->
     _subjects = Immutable.Map()
     _default = false
 
+    robot.brain.on "loaded", ->
+        _convertToSet = (k, v) ->
+            if Immutable.Iterable.isIndexed(v) then v.toSet() else v.toMap()
+
+        data = robot.brain.data.authority
+        _policies = Immutable.fromJS data[0], _convertToSet
+        _subjects = Immutable.fromJS data[1], _convertToSet
+        _default = data[2]
+        robot.logger.debug "hubot-authority: loading, and converting RBAC from brain..."
+        robot.logger.debug "hubot-authority: policies -> #{_policies}"
+        robot.logger.debug "hubot-authority: subjects -> #{_subjects}"
+        robot.logger.debug "hubot-authority: default -> #{_default}"
+
+    _saveRBAC = ->
+        robot.brain.data.authority =
+            Immutable.List [_policies, _subjects, _default]
+        robot.brain.save()
+
     _updatePolicy = (lid, role, block = true) ->
         # Roles are automatically created if they do not exist
-        newPolicies = _policies.update(role, Immutable.Set(), (set) ->
+        newPolicies = _policies.update role, Immutable.Set(), (set) ->
             if block
                 robot.logger.debug "hubot-authority: blocking listener ID..."
                 set.add lid
             else
                 robot.logger.debug "hubot-authority: unblocking listener ID..."
                 set.remove lid
-        )
+
         _policies = newPolicies
-        robot.logger.debug "hubot-authority: #{_policies}"
+        _saveRBAC()
+        robot.logger.debug "hubot-authority: policies -> #{_policies}"
 
     _updateSubject = (subject, role, assign = true) ->
-        newSubjects = _subjects.update(subject, Immutable.Set(), (set) ->
+        newSubjects = _subjects.update subject, Immutable.Set(), (set) ->
             if assign
                 robot.logger.debug "hubot-authority: assigning role..."
                 set.add role
             else
                 robot.logger.debug "hubot-authority: unassigning role..."
                 set.remove role
-        )
+
         _subjects = newSubjects
-        robot.logger.debug "hubot-authority: #{_subjects}"
+        _saveRBAC()
+        robot.logger.debug "hubot-authority: subjects -> #{_subjects}"
 
     robot.respond /auth me/i, id: "auth.me", (res) ->
         # TODO: List blacklist?
