@@ -4,7 +4,7 @@ chai.use require "sinon-chai"
 
 expect = chai.expect
 
-describe "authority", ->
+describe "rbac", ->
   beforeEach ->
     @robot =
       brain:
@@ -14,7 +14,7 @@ describe "authority", ->
       listenerMiddleware: sinon.spy (context, next, done) =>
           # Do nothing
 
-    require("../src/authority")(@robot)
+    require("../src/rbac")(@robot)
 
   it "registers a respond listener", ->
     expect(@robot.respond).to.have.been.calledWith(/auth me/i)

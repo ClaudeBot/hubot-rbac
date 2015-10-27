@@ -30,17 +30,17 @@ module.exports = (robot) ->
         _convertToSet = (k, v) ->
             if Immutable.Iterable.isIndexed(v) then v.toSet() else v.toMap()
 
-        data = robot.brain.data.authority
+        data = robot.brain.data.rbac
         _policies = Immutable.fromJS data[0], _convertToSet
         _subjects = Immutable.fromJS data[1], _convertToSet
         _default = data[2]
-        robot.logger.debug "hubot-authority: loading, and converting RBAC from brain..."
-        robot.logger.debug "hubot-authority: policies -> #{_policies}"
-        robot.logger.debug "hubot-authority: subjects -> #{_subjects}"
-        robot.logger.debug "hubot-authority: default -> #{_default}"
+        robot.logger.debug "hubot-rbac: loading, and converting RBAC from brain..."
+        robot.logger.debug "hubot-rbac: policies -> #{_policies}"
+        robot.logger.debug "hubot-rbac: subjects -> #{_subjects}"
+        robot.logger.debug "hubot-rbac: default -> #{_default}"
 
     _saveRBAC = ->
-        robot.brain.data.authority =
+        robot.brain.data.rbac =
             Immutable.List [_policies, _subjects, _default]
         robot.brain.save()
 
@@ -48,28 +48,28 @@ module.exports = (robot) ->
         # Roles are automatically created if they do not exist
         newPolicies = _policies.update role, Immutable.Set(), (set) ->
             if block
-                robot.logger.debug "hubot-authority: blocking listener ID..."
+                robot.logger.debug "hubot-rbac: blocking listener ID..."
                 set.add lid
             else
-                robot.logger.debug "hubot-authority: unblocking listener ID..."
+                robot.logger.debug "hubot-rbac: unblocking listener ID..."
                 set.remove lid
 
         _policies = newPolicies
         _saveRBAC()
-        robot.logger.debug "hubot-authority: policies -> #{_policies}"
+        robot.logger.debug "hubot-rbac: policies -> #{_policies}"
 
     _updateSubject = (subject, role, assign = true) ->
         newSubjects = _subjects.update subject, Immutable.Set(), (set) ->
             if assign
-                robot.logger.debug "hubot-authority: assigning role..."
+                robot.logger.debug "hubot-rbac: assigning role..."
                 set.add role
             else
-                robot.logger.debug "hubot-authority: unassigning role..."
+                robot.logger.debug "hubot-rbac: unassigning role..."
                 set.remove role
 
         _subjects = newSubjects
         _saveRBAC()
-        robot.logger.debug "hubot-authority: subjects -> #{_subjects}"
+        robot.logger.debug "hubot-rbac: subjects -> #{_subjects}"
 
     robot.respond /auth me/i, id: "auth.me", (res) ->
         # TODO: List blacklist?
@@ -122,7 +122,7 @@ module.exports = (robot) ->
 
         terminate = false
         _blockRequest = ->
-            robot.logger.debug "hubot-authority: \"#{subject}\" executed a blacklisted listener (\"#{lid}\")."
+            robot.logger.debug "hubot-rbac: \"#{subject}\" executed a blacklisted listener (\"#{lid}\")."
             context.response.reply "Sorry, you are not authorised to execute that command."
             done()
             terminate = true

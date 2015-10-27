@@ -1,28 +1,28 @@
-# hubot-authority
+# hubot-rbac
 
-[![Build Status](https://travis-ci.org/ClaudeBot/hubot-authority.svg)](https://travis-ci.org/ClaudeBot/hubot-authority)
-[![devDependency Status](https://david-dm.org/ClaudeBot/hubot-authority/dev-status.svg)](https://david-dm.org/ClaudeBot/hubot-authority#info=devDependencies)
+[![Build Status](https://travis-ci.org/ClaudeBot/hubot-rbac.svg)](https://travis-ci.org/ClaudeBot/hubot-rbac)
+[![devDependency Status](https://david-dm.org/ClaudeBot/hubot-rbac/dev-status.svg)](https://david-dm.org/ClaudeBot/hubot-rbac#info=devDependencies)
 
 A Hubot script for restricting access to commands through [role-based access control (RBAC)][rbac], and [Listener IDs][options].
 
 Roles are automatically created when policies are added / removed (e.g. when a listener ID is blocked). Currently, the script can only block listeners IF they have an ID attached to it via their [options / metadata][options]. Furthermore, the full ID must be specified when creating policies.
 
-See [`src/authority.coffee`](src/authority.coffee) for full documentation.
+See [`src/rbac.coffee`](src/rbac.coffee) for full documentation.
 
 
 ## Installation via NPM
 
-1. Install the **hubot-authority** module as a Hubot dependency by running:
+1. Install the **hubot-rbac** module as a Hubot dependency by running:
 
     ```
-    npm install --save hubot-authority
+    npm install --save hubot-rbac
     ```
 
-2. Enable the module by adding the **hubot-authority** entry to your `external-scripts.json` file:
+2. Enable the module by adding the **hubot-rbac** entry to your `external-scripts.json` file:
 
     ```json
     [
-        "hubot-authority"
+        "hubot-rbac"
     ]
     ```
 

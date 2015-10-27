@@ -1,16 +1,16 @@
 {
-  "name": "hubot-authority",
+  "name": "hubot-rbac",
   "description": "A Hubot script for restricting access to commands through role-based access control (RBAC), and Listener IDs.",
   "version": "0.0.2",
   "author": "Ian Lai <os@fyianlai.com>",
   "license": "MIT",
-  "keywords": "hubot, hubot-scripts, acl, restrictions, whitelist, blacklist, commands, authorization",
+  "keywords": "hubot, hubot-scripts, acl, rbac, roles, authorization, authentication, restriction, whitelist, blacklist, command",
   "repository": {
     "type": "git",
-    "url": "git://github.com/ClaudeBot/hubot-authority.git"
+    "url": "git://github.com/ClaudeBot/hubot-rbac.git"
   },
   "bugs": {
-    "url": "https://github.com/ClaudeBot/hubot-authority/issues"
+    "url": "https://github.com/ClaudeBot/hubot-rbac/issues"
   },
   "dependencies": {
     "immutable": "^3.7.5"
