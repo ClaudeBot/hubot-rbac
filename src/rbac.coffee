@@ -31,12 +31,14 @@ module.exports = (robot) ->
             if Immutable.Iterable.isIndexed(v) then v.toSet() else v.toMap()
 
         data = robot.brain.data.rbac
-        _policies = Immutable.fromJS data[0], _convertToSet
-        _subjects = Immutable.fromJS data[1], _convertToSet
-        _default = data[2]
+        return unless data?
+
         robot.logger.debug "hubot-rbac: loading, and converting RBAC from brain..."
+        _policies = Immutable.fromJS data[0], _convertToSet
         robot.logger.debug "hubot-rbac: policies -> #{_policies}"
+        _subjects = Immutable.fromJS data[1], _convertToSet
         robot.logger.debug "hubot-rbac: subjects -> #{_subjects}"
+        _default = data[2]
         robot.logger.debug "hubot-rbac: default -> #{_default}"
 
     _saveRBAC = ->
