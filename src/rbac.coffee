@@ -12,10 +12,12 @@
 #   hubot auth unassign <subject> <role> - Unassigns <subject> from <role>.
 #   hubot auth default <role> - Changes the default <role> for unassigned subjects.
 #   hubot auth ids - Returns a list of listener IDs that can be blocked.
+#   hubot auth roles - Returns a list of roles, and their respective subjects.
 #
 # Notes:
 #   WIP
 #   May add support for RegEx blocking
+#   Case-sensitivity
 #
 # Author:
 #   MrSaints
@@ -143,6 +145,21 @@ module.exports = (robot) ->
         ids = (listener.options.id for listener in robot.listeners when listener.options.id?)
         robot.logger.debug "hubot-rbac: #{ids}"
         res.send "Available listener IDs: #{ids.join(", ")}"
+
+    robot.respond /auth roles/i, id: "auth.roles", (res) ->
+        response = {}
+        noResults = true
+
+        _subjects.forEach (roles, subject) ->
+            roles.forEach (role) ->
+                response[role] or= []
+                response[role].push subject
+
+        for role, subjects of response
+            res.send "#{role}: #{subjects.join(", ")}"
+            noResults = false
+
+        return res.reply "There are no assigned roles." if noResults
 
     robot.listenerMiddleware (context, next, done) ->
         lid = context.listener.options.id
