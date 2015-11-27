@@ -2,7 +2,7 @@
 #   Role-based Access Control (RBAC) using Listener IDs
 #
 # Configuration:
-#   None
+#   HUBOT_RBAC_POWER_USERS
 #
 # Commands:
 #   hubot auth me - Returns your current role(s).
@@ -22,7 +22,15 @@
 
 Immutable = require "immutable"
 
+# Config
+HUBOT_RBAC_POWER_USERS = process.env.HUBOT_RBAC_POWER_USERS
+
 module.exports = (robot) ->
+    _powerUsers = []
+    if HUBOT_RBAC_POWER_USERS?
+        _powerUsers = HUBOT_RBAC_POWER_USERS.split ","
+
+    # Initialize
     _policies = Immutable.Map()
     _subjects = Immutable.Map()
     _default = false
@@ -34,7 +42,7 @@ module.exports = (robot) ->
         data = robot.brain.data.rbac
         return unless data?
 
-        robot.logger.debug "hubot-rbac: loading, and converting RBAC from brain..."
+        robot.logger.info "hubot-rbac: loading, and converting RBAC from brain..."
         _policies = Immutable.fromJS data[0], _convertToSet
         robot.logger.debug "hubot-rbac: policies -> #{_policies}"
         _subjects = Immutable.fromJS data[1], _convertToSet
@@ -74,6 +82,9 @@ module.exports = (robot) ->
         _saveRBAC()
         robot.logger.debug "hubot-rbac: subjects -> #{_subjects}"
 
+    _isPower = (user) ->
+        return user in _powerUsers
+
     robot.respond /auth me/i, id: "auth.me", (res) ->
         # TODO: List blacklist?
         subject = res.message.user.name
@@ -96,11 +107,15 @@ module.exports = (robot) ->
         res.reply "Listener ID \"#{lid}\" is unblocked for \"#{role}\" subjects."
 
     robot.respond /auth assign (.+) (.+)/i, id: "auth.assign", (res) ->
-        # TODO: Check if user, ~~and group exists~~
+        # TODO: Check if user, ~~and group~~ exists
         #user = robot.brain.userForName subject
         #subject = user.name
         subject = res.match[1]
         role = res.match[2]
+
+        if _isPower(subject)
+            robot.logger.warning "hubot-rbac: \"#{res.message.user.name}\" attempted to modify a power user's permissions (\"#{subject}\")."
+            return res.reply "Sorry, you can not modify a power user's permissions."
 
         if not _policies.has(role)
             res.reply "Warning: the role (\"#{role}\") you have entered does not have any policies."
@@ -111,6 +126,11 @@ module.exports = (robot) ->
     robot.respond /auth unassign (.+) (.+)/i, id: "auth.unassign", (res) ->
         subject = res.match[1]
         role = res.match[2]
+
+        if _isPower(subject)
+            robot.logger.warning "hubot-rbac: \"#{res.message.user.name}\" attempted to modify a power user's permissions (\"#{subject}\")."
+            return res.reply "Sorry, you can not modify a power user's permissions."
+
         _updateSubject subject, role, false
         res.reply "Unassigned \"#{subject}\" from \"#{role}\"."
 
@@ -130,14 +150,15 @@ module.exports = (robot) ->
 
         terminate = false
         _blockRequest = ->
-            robot.logger.debug "hubot-rbac: \"#{subject}\" executed a blacklisted listener (\"#{lid}\")."
+            robot.logger.warning "hubot-rbac: \"#{subject}\" executed a blacklisted listener (\"#{lid}\")."
             context.response.reply "Sorry, you are not authorised to execute that command."
             done()
             terminate = true
             return false
 
-        # Skip if there are no subjects
-        if _subjects.size is 0
+        # Skip if there are no subjects / policies or if it is a power user
+        if _subjects.size is 0 or _policies.size is 0 or _isPower(context.response.message.user.name)
+            robot.logger.debug "hubot-rbac: Skipping checks..."
             next()
             return false
         # Check default role if the subject has no roles

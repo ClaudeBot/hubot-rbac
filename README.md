@@ -5,7 +5,13 @@
 
 A Hubot script for restricting access to commands through [role-based access control (RBAC)][rbac], and [Listener IDs][options].
 
-Roles are automatically created when policies are added / removed (e.g. when a listener ID is blocked). Currently, the script can only block listeners IF they have an ID attached to it via their [options / metadata][options]. Furthermore, the full ID must be specified when creating policies.
+Roles are automatically created when policies are added / removed (e.g. when a listener ID is blocked).
+
+### Caveats
+
+- Currently, the script can only block listeners IF they have an ID attached to it via their [options / metadata][options];
+- Furthermore, the full ID must be specified when creating policies;
+- None of the script's commands are blocked by default (i.e. anyone can use it, but they can not use it against a power user).
 
 See [`src/rbac.coffee`](src/rbac.coffee) for full documentation.
 
@@ -27,6 +33,13 @@ See [`src/rbac.coffee`](src/rbac.coffee) for full documentation.
     ```
 
 3. Run your bot and see below for available config / commands
+
+
+## Configuration
+
+Variable | Default | Description
+--- | --- | ---
+`HUBOT_RBAC_POWER_USERS` | N/A | A comma-separated list of user names to be granted complete, and immutable permissions.
 
 
 ## Commands
