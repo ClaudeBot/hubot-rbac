@@ -24,6 +24,7 @@ describe "rbac", ->
     expect(@robot.respond).to.have.been.calledWith(/auth unassign (.+) (.+)/i)
     expect(@robot.respond).to.have.been.calledWith(/auth default (.+)/i)
     expect(@robot.respond).to.have.been.calledWith(/auth ids/i)
+    expect(@robot.respond).to.have.been.calledWith(/auth roles/i)
 
   it "registers a listener middleware", ->
     expect(@robot.listenerMiddleware).to.have.been.called
