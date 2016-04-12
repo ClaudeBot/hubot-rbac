@@ -89,7 +89,7 @@ module.exports = (robot) ->
 
     robot.respond /auth me/i, id: "auth.me", (res) ->
         # TODO: List blacklist?
-        subject = res.message.user.name
+        subject = res.message.user.id
         if not _subjects.has(subject) or _subjects.get(subject).size is 0
             res.reply "You are not assigned to any roles."
         else
@@ -163,7 +163,7 @@ module.exports = (robot) ->
 
     robot.listenerMiddleware (context, next, done) ->
         lid = context.listener.options.id
-        subject = context.response.message.user.name
+        subject = context.response.message.user.id
 
         terminate = false
         _blockRequest = ->
@@ -174,7 +174,7 @@ module.exports = (robot) ->
             return false
 
         # Skip if there are no subjects / policies or if it is a power user
-        if _subjects.size is 0 or _policies.size is 0 or _isPower(context.response.message.user.name)
+        if _subjects.size is 0 or _policies.size is 0 or _isPower(subject)
             robot.logger.debug "hubot-rbac: Skipping checks..."
             next()
             return false
