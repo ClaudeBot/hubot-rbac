@@ -1,7 +1,7 @@
 # hubot-rbac
 
 [![Build Status](https://travis-ci.org/ClaudeBot/hubot-rbac.svg)](https://travis-ci.org/ClaudeBot/hubot-rbac)
-[![devDependency Status](https://david-dm.org/ClaudeBot/hubot-rbac/dev-status.svg)](https://david-dm.org/ClaudeBot/hubot-rbac#info=devDependencies)
+[![Dependency Status](https://david-dm.org/ClaudeBot/hubot-rbac.svg)](https://david-dm.org/ClaudeBot/hubot-rbac)
 
 __This script relies on a new Hubot [v2.14.0](https://github.com/github/hubot/blob/master/CHANGELOG.md#v2140) feature known as ['listener middleware'](https://github.com/github/hubot/pull/803). It WILL NOT work on older versions of Hubot.__
 
